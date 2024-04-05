@@ -211,6 +211,23 @@ class VideoDetailsPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 20),
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: BetterPlayer(
+                controller: BetterPlayerController(
+                  BetterPlayerConfiguration(
+                    autoPlay: false,
+                    fit: BoxFit.contain,
+                    aspectRatio: 16 / 9,
+                  ),
+                  betterPlayerDataSource: BetterPlayerDataSource(
+                    BetterPlayerDataSourceType.file,
+                    compressedVideoUrl,
+                  ),
+                ),
+              ),
+            ),
             SizedBox(height: 10),
             ListTile(
               title: Text('Video URL'),
