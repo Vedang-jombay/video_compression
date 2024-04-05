@@ -3,10 +3,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:better_player/better_player.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,12 +16,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VideoUploadScreen(),
+      home: const VideoUploadScreen(),
     );
   }
 }
 
 class VideoUploadScreen extends StatefulWidget {
+  const VideoUploadScreen({super.key});
+
   @override
   _VideoUploadScreenState createState() => _VideoUploadScreenState();
 }
@@ -56,8 +60,8 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
       });
 
       _betterPlayerController = BetterPlayerController(
-        BetterPlayerConfiguration(
-          autoPlay: true,
+        const BetterPlayerConfiguration(
+          autoPlay: false,
           fit: BoxFit.contain,
           aspectRatio: 16 / 9,
         ),
@@ -86,7 +90,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Compress'),
+        title: const Text('Video Compress'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -100,16 +104,16 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
                     onPressed: () {
 
                     },
-                    child: Text('Record Video'),
+                    child: const Text('Record Video'),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _pickVideo,
-                    child: Text('Pick Video'),
+                    child: const Text('Pick Video'),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_betterPlayerController != null) ...[
                 AspectRatio(
                   aspectRatio: 16 / 9,
@@ -117,33 +121,33 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
                     controller: _betterPlayerController!,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'File Details',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ListTile(
-                  title: Text('Video URL'),
+                  title: const Text('Video URL'),
                   subtitle: Text(videoUrl!),
                 ),
                 ListTile(
-                  title: Text('Name'),
+                  title: const Text('Name'),
                   subtitle: Text(videoName!),
                 ),
                 ListTile(
-                  title: Text('Size'),
+                  title: const Text('Size'),
                   subtitle: Text(videoSize!),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
 
                   },
-                  child: Text('Compress Video'),
+                  child: const Text('Compress Video'),
                 ),
               ],
             ],
