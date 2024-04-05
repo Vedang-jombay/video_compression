@@ -6,10 +6,12 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,12 +19,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VideoUploadScreen(),
+      home: const VideoUploadScreen(),
     );
   }
 }
 
 class VideoUploadScreen extends StatefulWidget {
+  const VideoUploadScreen({super.key});
+
   @override
   _VideoUploadScreenState createState() => _VideoUploadScreenState();
 }
@@ -52,7 +56,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
       });
 
       _betterPlayerController = BetterPlayerController(
-        BetterPlayerConfiguration(
+        const BetterPlayerConfiguration(
           autoPlay: false,
           fit: BoxFit.contain,
           aspectRatio: 16 / 9,
@@ -82,7 +86,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Upload'),
+        title: const Text('Video Upload'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -94,16 +98,16 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {},
-                    child: Text('Record Video'),
+                    child: const Text('Record Video'),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _pickVideo,
-                    child: Text('Pick Video'),
+                    child: const Text('Pick Video'),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_betterPlayerController != null) ...[
                 AspectRatio(
                   aspectRatio: 16 / 9,
@@ -111,37 +115,37 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
                     controller: _betterPlayerController!,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Original File Details',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ListTile(
-                  title: Text('Video URL'),
+                  title: const Text('Video URL'),
                   subtitle: Text(originalVideoUrl ?? ''),
                 ),
                 ListTile(
-                  title: Text('Name'),
+                  title: const Text('Name'),
                   subtitle: Text(originalVideoName ?? ''),
                 ),
                 ListTile(
-                  title: Text('Size'),
+                  title: const Text('Size'),
                   subtitle: Text(originalVideoSize ?? ''),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: isCompressing ? null : _compressVideo,
-                  child: Text('Compress Video'),
+                  child: const Text('Compress Video'),
                 ),
-                if (isCompressing) SizedBox(height: 20),
+                if (isCompressing) const SizedBox(height: 20),
                 if (isCompressing)
                   LinearProgressIndicator(
                     backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
               ],
             ],
@@ -156,11 +160,11 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
       setState(() {
         isCompressing = true;
       });
-      final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+      final FlutterFFmpeg flutterFFmpeg = FlutterFFmpeg();
       final String inputPath = originalVideoUrl!;
       final String outputPath =
       inputPath.replaceAll('.mp4', '_compressed.mp4');
-      final int rc = await _flutterFFmpeg.execute(
+      final int rc = await flutterFFmpeg.execute(
           '-y -i $inputPath -vf "scale=iw/2:ih/2" -c:a copy $outputPath');
       if (rc == 0) {
         Navigator.push(
@@ -187,7 +191,7 @@ class VideoDetailsPage extends StatelessWidget {
   final String compressedVideoName;
   final String compressedVideoSize;
 
-  const VideoDetailsPage({
+  const VideoDetailsPage({super.key, 
     required this.compressedVideoUrl,
     required this.compressedVideoName,
     required this.compressedVideoSize,
@@ -197,26 +201,26 @@ class VideoDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Compressed Video Details'),
+        title: const Text('Compressed Video Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Compressed File Details',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             AspectRatio(
               aspectRatio: 16 / 9,
               child: BetterPlayer(
                 controller: BetterPlayerController(
-                  BetterPlayerConfiguration(
+                  const BetterPlayerConfiguration(
                     autoPlay: false,
                     fit: BoxFit.contain,
                     aspectRatio: 16 / 9,
@@ -228,17 +232,17 @@ class VideoDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ListTile(
-              title: Text('Video URL'),
+              title: const Text('Video URL'),
               subtitle: Text(compressedVideoUrl),
             ),
             ListTile(
-              title: Text('Name'),
+              title: const Text('Name'),
               subtitle: Text(compressedVideoName),
             ),
             ListTile(
-              title: Text('Size'),
+              title: const Text('Size'),
               subtitle: Text(compressedVideoSize),
             ),
           ],
