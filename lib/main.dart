@@ -191,36 +191,92 @@ class VideoDetailsPage extends StatelessWidget {
   final String compressedVideoName;
   final String compressedVideoSize;
 
-  const VideoDetailsPage({super.key, 
+  const VideoDetailsPage({
     required this.compressedVideoUrl,
     required this.compressedVideoName,
     required this.compressedVideoSize,
   });
 
+  Future<void> _downloadVideo(BuildContext context) async {
+    final String localFilePath = compressedVideoUrl;
+    final String fileName = compressedVideoName;
+    final Directory downloadsDirectory = Directory('/storage/emulated/0/Download');
+    final File saveFile = File('${downloadsDirectory.path}/$fileName');
+
+    if (!await downloadsDirectory.exists()) {
+      await downloadsDirectory.create(recursive: true);
+    }
+
+    if (await saveFile.exists()) {
+      // File already exists, prompt user to overwrite or cancel
+      final bool overwrite = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('File Already Exists'),
+            content: Text('Do you want to overwrite the existing file?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true); // Overwrite
+                },
+                child: Text('Overwrite'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false); // Cancel
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (!overwrite) {
+        return; // Cancel download
+      }
+    }
+
+    // Copy the file to the Downloads directory
+    try {
+      await saveFile.writeAsBytes(await File(localFilePath).readAsBytes());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Download complete!'),
+      ));
+    } catch (e) {
+      print('Error downloading file: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error downloading file. Please try again.'),
+      ));
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Compressed Video Details'),
+        title: Text('Compressed Video Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Compressed File Details',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             AspectRatio(
               aspectRatio: 16 / 9,
               child: BetterPlayer(
                 controller: BetterPlayerController(
-                  const BetterPlayerConfiguration(
+                  BetterPlayerConfiguration(
                     autoPlay: false,
                     fit: BoxFit.contain,
                     aspectRatio: 16 / 9,
@@ -232,18 +288,23 @@ class VideoDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             ListTile(
-              title: const Text('Video URL'),
+              title: Text('Video URL'),
               subtitle: Text(compressedVideoUrl),
             ),
             ListTile(
-              title: const Text('Name'),
+              title: Text('Name'),
               subtitle: Text(compressedVideoName),
             ),
             ListTile(
-              title: const Text('Size'),
+              title: Text('Size'),
               subtitle: Text(compressedVideoSize),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _downloadVideo(context),
+              child: Text('Download Compressed Video'),
             ),
           ],
         ),
