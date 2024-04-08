@@ -191,7 +191,7 @@ class VideoDetailsPage extends StatelessWidget {
   final String compressedVideoName;
   final String compressedVideoSize;
 
-  const VideoDetailsPage({
+  const VideoDetailsPage({super.key, 
     required this.compressedVideoUrl,
     required this.compressedVideoName,
     required this.compressedVideoSize,
@@ -213,20 +213,20 @@ class VideoDetailsPage extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('File Already Exists'),
-            content: Text('Do you want to overwrite the existing file?'),
+            title: const Text('File Already Exists'),
+            content: const Text('Do you want to overwrite the existing file?'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true); // Overwrite
                 },
-                child: Text('Overwrite'),
+                child: const Text('Overwrite'),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(false); // Cancel
                 },
-                child: Text('Cancel'),
+                child: const Text('Cancel'),
               ),
             ],
           );
@@ -241,12 +241,12 @@ class VideoDetailsPage extends StatelessWidget {
     // Copy the file to the Downloads directory
     try {
       await saveFile.writeAsBytes(await File(localFilePath).readAsBytes());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Download complete!'),
       ));
     } catch (e) {
       print('Error downloading file: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error downloading file. Please try again.'),
       ));
     }
@@ -257,26 +257,26 @@ class VideoDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Compressed Video Details'),
+        title: const Text('Compressed Video Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Compressed File Details',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             AspectRatio(
               aspectRatio: 16 / 9,
               child: BetterPlayer(
                 controller: BetterPlayerController(
-                  BetterPlayerConfiguration(
+                  const BetterPlayerConfiguration(
                     autoPlay: false,
                     fit: BoxFit.contain,
                     aspectRatio: 16 / 9,
@@ -288,23 +288,23 @@ class VideoDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ListTile(
-              title: Text('Video URL'),
+              title: const Text('Video URL'),
               subtitle: Text(compressedVideoUrl),
             ),
             ListTile(
-              title: Text('Name'),
+              title: const Text('Name'),
               subtitle: Text(compressedVideoName),
             ),
             ListTile(
-              title: Text('Size'),
+              title: const Text('Size'),
               subtitle: Text(compressedVideoSize),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _downloadVideo(context),
-              child: Text('Download Compressed Video'),
+              child: const Text('Download Compressed Video'),
             ),
           ],
         ),
