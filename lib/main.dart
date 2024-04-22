@@ -229,7 +229,8 @@ class VideoDetailsPage extends StatelessWidget {
   Future<void> _downloadVideo(BuildContext context) async {
     final String localFilePath = compressedVideoUrl;
     final String fileName = compressedVideoName;
-    final Directory downloadsDirectory = Directory('/storage/emulated/0/Download');
+    final Directory downloadsDirectory =
+    Directory('/storage/emulated/0/Download');
     final File saveFile = File('${downloadsDirectory.path}/$fileName');
 
     if (!await downloadsDirectory.exists()) {
