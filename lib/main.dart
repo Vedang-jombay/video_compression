@@ -11,12 +11,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Video Upload App',
+      title: 'Video Compression App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class VideoUploadScreen extends StatefulWidget {
-  const VideoUploadScreen({super.key});
+  const VideoUploadScreen({Key? key}) : super(key: key);
 
   @override
   _VideoUploadScreenState createState() => _VideoUploadScreenState();
@@ -114,7 +114,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Video Upload'),
+        title: const Text('Video Compression'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -131,7 +131,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _pickVideo,
-                    child: const Text('Pick Video'),
+                    child: const Text('Upload Video'),
                   ),
                 ],
               ),
@@ -206,6 +206,25 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
             ),
           ),
         );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Compression Failed!'),
+              content: const Text(
+                  'No such file or directory. Please avoid any spaces in the name of the video if any, and try again.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
       setState(() {
         isCompressing = false;
@@ -220,11 +239,11 @@ class VideoDetailsPage extends StatelessWidget {
   final String compressedVideoSize;
 
   const VideoDetailsPage({
-    super.key,
+    Key? key,
     required this.compressedVideoUrl,
     required this.compressedVideoName,
     required this.compressedVideoSize,
-  });
+  }) : super(key: key);
 
   Future<void> _downloadVideo(BuildContext context) async {
     final String localFilePath = compressedVideoUrl;
@@ -238,7 +257,6 @@ class VideoDetailsPage extends StatelessWidget {
     }
 
     if (await saveFile.exists()) {
-      // File already exists, prompt user to overwrite or cancel
       final bool overwrite = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -264,11 +282,10 @@ class VideoDetailsPage extends StatelessWidget {
       );
 
       if (!overwrite) {
-        return; // Cancel download
+        return;
       }
     }
 
-    // Copy the file to the Downloads directory
     try {
       await saveFile.writeAsBytes(await File(localFilePath).readAsBytes());
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
