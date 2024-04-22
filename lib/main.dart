@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -71,6 +72,33 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
     }
   }
 
+  Future<void> _recordVideo() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getVideo(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        originalVideoUrl = pickedFile.path;
+        originalVideoName = pickedFile.path.split('/').last;
+        originalVideoSize = _formatBytes(File(pickedFile.path).lengthSync());
+      });
+
+      _betterPlayerController = BetterPlayerController(
+        const BetterPlayerConfiguration(
+          autoPlay: false,
+          fit: BoxFit.contain,
+          aspectRatio: 16 / 9,
+        ),
+        betterPlayerDataSource: BetterPlayerDataSource(
+          BetterPlayerDataSourceType.file,
+          pickedFile.path,
+        ),
+      );
+
+      setState(() {});
+    }
+  }
+
   String _formatBytes(int bytes) {
     const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
     int index = 0;
@@ -97,7 +125,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
               Row(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _recordVideo,
                     child: const Text('Record Video'),
                   ),
                   const SizedBox(width: 10),
@@ -191,7 +219,8 @@ class VideoDetailsPage extends StatelessWidget {
   final String compressedVideoName;
   final String compressedVideoSize;
 
-  const VideoDetailsPage({super.key, 
+  const VideoDetailsPage({
+    super.key,
     required this.compressedVideoUrl,
     required this.compressedVideoName,
     required this.compressedVideoSize,
@@ -251,7 +280,6 @@ class VideoDetailsPage extends StatelessWidget {
       ));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
